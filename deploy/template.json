@@ -142,7 +142,7 @@
             "name": "[parameters('siteName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[concat('Microsoft.Web/sites/',parameters('siteName'))]"
+                "[concat('Microsoft.Web/sites/', parameters('siteName'))]"
             ],
             "properties": {
                 "actions": [
