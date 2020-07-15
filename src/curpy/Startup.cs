@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Net.Http.Headers;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
+
 namespace curpy
 {
     public class Startup
@@ -34,10 +36,24 @@ namespace curpy
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            app.UseCertificateForwarding();
 
             app.Use(next => async context =>
             {
+                if (context.Connection.ClientCertificate is X509Certificate2 cert)
+                {
+                    logger.LogInformation("Request has a client certificate.");
+                    var json = JsonSerializer.Serialize(cert, new JsonSerializerOptions()
+                    {
+                        WriteIndented = true,
+                    });
+                    logger.LogInformation("Certificate: {Certificate}", json);
+                }
+                else
+                {
+                    logger.LogInformation("Request does not have a certificate.");
+                }
+
                 if (context.Request.Headers.ContainsKey(HeaderNames.Authorization))
                 {
                     logger.LogInformation("Got authorization header.");

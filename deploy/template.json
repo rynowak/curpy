@@ -39,7 +39,7 @@
                 "P3",
                 "P4"
             ],
-            "defaultValue": "F1",
+            "defaultValue": "B1",
             "metadata": {
                 "description": "The pricing tier for the hosting plan."
             }
@@ -116,7 +116,8 @@
                     "appSettings": [{
                         "name": "STORAGEKEY",
                         "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), '2019-04-01').keys[0].value)]"
-                    }]
+                    }],
+                    "clientCertEnabled": true
                 }
             },
             "resources": [
